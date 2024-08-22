@@ -1,0 +1,2 @@
+findmnt -kn /tmp
+

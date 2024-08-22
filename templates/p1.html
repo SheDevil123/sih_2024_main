@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIS Microsoft Azure Foundations Benchmark</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='p1.css')}}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <a href="https://www.example.com" target="_blank">
+                    <img src="{{ url_for('static', filename='CISlogo.png')}}" style="width:150px;height:auto;">
+                </a>                
+                <h1>CIS Microsoft Azure Foundations Benchmark (v1.1.0)</h1>
+            </div>
+            <div class="header-right">
+                <p>Albert Enterprises</p>
+                <p>Last Updated Time: <span>4/1/2020 1:09:04 PM (GMT)</span></p>
+            </div>
+        </header>
+
+        <div class="deployment-info">
+            <div class="deployment">
+                <label for="deployment-name">Deployment Name:</label>
+                <select id="deployment-name">
+                    <option>Development Azure Environment</option>
+                </select>
+            </div>
+            <div class="section">
+                <label for="section">Section:</label>
+                <select id="section" onchange="filterTable()">
+                    <option value="all">(All)</option>
+                    <option value="Identity and Access Management">Identity and Access Management</option>
+                    <option value="Security Center">Security Center</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="summary">
+            <div class="summary-box passed">
+                <h2>Passed Checks</h2>
+                <p>{{ (no_of_pass/total)*100}}% ({{ no_of_pass }})</p>
+            </div>
+            <div class="summary-box partially-passed">
+                <h2>Partially Passed Checks</h2>
+                <p>{{ (no_of_partial/total)*100}}% ({{ no_of_partial}})</p>
+            </div>
+            <div class="summary-box failed">
+                <h2>Failed Checks</h2>
+                <p>{{ (no_of_fail/total)*100}}% ({{ no_of_fail }})</p>
+            </div>
+        </div>
+
+        <table class="checklist">
+            <thead>
+                <tr>
+                    <th>Section</th>
+                    <th>Description</th>
+                    <th>Passed/Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for i in report %}
+                <tr>
+                    <td>{{ i["title"] }}</td>
+                    <td>{{ i["disc"] }}</td>
+                    <td>{{ i["pof"][1] }}</td>
+                    <td class="{{ i['pof'][0] }}">{{ i['pof'][2] }}</td>
+                </tr>
+                {% endfor %}
+
+                {% for i in partial_reports %}
+                <tr>
+                    <td>{{ i["title"] }}</td>
+                    <td>{{ i["disc"] }}</td>
+                    <td>{{ i["pof"][1] }}</td>
+                    <td class="{{ i['pof'][0] }}">{{ i['pof'][2] }}</td>
+                </tr>
+                {% endfor %}
+                <!--<tr data-section="Security Center">
+                    <td>Security Center</td>
+                    <td>Ensure that standard pricing tier is selected</td>
+                    <td>0/1</td>
+                    <td class="status failed">Failed</td>
+                </tr>
+                <tr data-section="Security Center">
+                    <td>Security Center</td>
+                    <td>Ensure that 'Automatic provisioning of monitoring agent' is set to 'On'</td>
+                    <td>1/1</td>
+                    <td class="status passed">Passed</td>
+                </tr>
+                <tr data-section="Security Center">
+                    <td>Security Center</td>
+                    <td>Ensure ASC Default policy setting 'Monitor System Updates' is not 'Disabled'</td>
+                    <td>1/1</td>
+                    <td class="status passed">Passed</td>
+                </tr>
+                <tr data-section="Security Center">
+                    <td>Security Center</td>
+                    <td>Ensure ASC Default policy setting 'Monitor OS Vulnerabilities' is not 'Disabled'</td>
+                    <td>1/1</td>
+                    <td class="status passed">Passed</td>
+                </tr>
+                <tr data-section="Security Center">
+                    <td>Security Center</td>
+                    <td>Ensure ASC Default policy setting 'Monitor Endpoint Protection' is not 'Disabled'</td>
+                    <td>0/1</td>
+                    <td class="status passed">Passed</td>
+                </tr>
+                <tr data-section="Security Center">
+                    <td>Security Center</td>
+                    <td>Ensure ASC Default policy setting 'Monitor Disk Encryption' is not 'Disabled'</td>
+                    <td>1/1</td>
+                    <td class="status passed">Passed</td>
+                </tr>
+                <tr data-section="Security Center">
+                    <td>Security Center</td>
+                    <td>Ensure ASC Default policy setting 'Monitor Network Security Groups' is not 'Disabled'</td>
+                    <td>1/1</td>
+                    <td class="status passed">Passed</td>
+                </tr>
+                <tr data-section="Security Center">
+                    <td>Security Center</td>
+                    <td>Ensure ASC Default policy setting 'Monitor Web Application Firewall' is not 'Disabled'</td>
+                    <td>1/1</td>
+                    <td class="status passed">Passed</td>
+                </tr>
+                <tr data-section="Security Center">
+                    <td>Security Center</td>
+                    <td>Ensure ASC Default policy setting 'Enable Next Generation Firewall(NGFW) Monitoring'</td>
+                    <td>1/1</td>
+                    <td class="status passed">Passed</td>
+                </tr>-->
+            </tbody>
+        </table>
+    </div>
+
+    <script src= {{url_for('static', filename='p1.js')}}></script>
+</body>
+</html>

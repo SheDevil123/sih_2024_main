@@ -1,0 +1,120 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-left .logo {
+    height: 50px;
+    margin-right: 10px;
+}
+
+header h1 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.header-right {
+    text-align: right;
+}
+
+.header-right p {
+    margin: 0;
+}
+
+.deployment-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.deployment-info label {
+    font-weight: bold;
+}
+
+.deployment-info select {
+    padding: 5px;
+    margin-left: 10px;
+}
+
+.summary {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.summary-box {
+    flex: 1;
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    margin-right: 10px;
+    color: #fff;
+}
+
+.summary-box:last-child {
+    margin-right: 0;
+}
+
+.passed {
+    background-color: #4CAF50;
+}
+
+.partially-passed {
+    background-color: #FFC107;
+}
+
+.failed {
+    background-color: #F44336;
+}
+
+.checklist {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.checklist th, .checklist td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.checklist th {
+    background-color: #f2f2f2;
+    text-align: left;
+}
+
+.status.passed {
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+}
+
+.status.partially-passed {
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+}
+
+.status.failed {
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+}
