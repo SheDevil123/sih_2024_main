@@ -67,7 +67,7 @@
                 {% for i in report %}
                 <tr>
                     <td>{{ i["title"] }}</td>
-                    <td>{{ i["disc"] }}</td>
+                    <td>{{ i["desc"] }}</td>
                     <td>{{ i["pof"][1] }}</td>
                     <td class="{{ i['pof'][0] }}">{{ i['pof'][2] }}</td>
                 </tr>
@@ -76,7 +76,7 @@
                 {% for i in partial_reports %}
                 <tr>
                     <td>{{ i["title"] }}</td>
-                    <td>{{ i["disc"] }}</td>
+                    <td>{{ i["desc"] }}</td>
                     <td>{{ i["pof"][1] }}</td>
                     <td class="{{ i['pof'][0] }}">{{ i['pof'][2] }}</td>
                 </tr>
@@ -138,6 +138,8 @@
             </tbody>
         </table>
     </div>
+    <br><br>
+    <center><a href="/report_download"><button>download report</button></a></div></center>
 
     <script src= {{url_for('static', filename='p1.js')}}></script>
 </body>

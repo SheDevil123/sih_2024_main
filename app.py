@@ -1,6 +1,7 @@
-from flask import Flask, request, redirect,url_for,render_template
+from flask import Flask, request, redirect,url_for,render_template, send_from_directory, send_file
 import subprocess 
 import os 
+import report_generator
 
 
 app=Flask(__name__)
@@ -20,15 +21,25 @@ filesystem_check_data={
     'usbstorage.sh':' Ensure usb-storage kernel module is not available '
 }
 
+
 partition_check_data={
-	"tmp":"Configure",
-	"devshm":"devshm disc",
-	"home":"home disc",
-	"var":"var disc",
-	"vartmp":"vartmp disc",
-	"varlog":"varlog disc",
-	"varlogaudit":"varlogaudit disc",
+	"tmp":"ensure tmp is separate partition and nodev, nosuid, noexec options are set",
+	"devshm":"ensure /dev/shm is separate partition and nodev, nosuid, noexec options are set",
+	"home":"ensure home is separate partition and nodev, nosuid options are set",
+	"var":"ensure var is separate partition and nodev, nosuid options are set",
+	"vartmp":"ensure /var/tmp is separate partition and nodev, nosuid, noexec options are set",
+	"varlog":"ensure /var/log is separate partition and nodev, nosuid, noexec options are set",
+	"varlogaudit":"ensure /var/log/audit is separate partition and nodev, nosuid, noexec options are set",
 }
+# partition_check_data={
+# 	"tmp":"Configure",
+# 	"devshm":"devshm desc",
+# 	"home":"home desc",
+# 	"var":"var desc",
+# 	"vartmp":"vartmp desc",
+# 	"varlog":"varlog desc",
+# 	"varlogaudit":"varlogaudit desc",
+# }
 
 @app.route('/', methods=['GET', 'POST'])
 def upload():
@@ -56,8 +67,8 @@ def upload():
 					output_dict["pof"]=["status failed",'0/1',"FAIL"]
 					fail_count+=1
 				
-				#adding discription 
-				output_dict["disc"]=filesystem_check_data[i]
+				#adding description 
+				output_dict["desc"]=filesystem_check_data[i]
 				output_dict["title"]="Configure Filesystem Kernel Modules"
 
 				report.append(output_dict)
@@ -77,8 +88,8 @@ def upload():
 				stdout_data,_=process.communicate()
 				output = stdout_data.decode('utf-8')
 
-				#adding discription 
-				output_dict["disc"]=partition_check_data[selected]
+				#adding description 
+				output_dict["desc"]=partition_check_data[selected]
 				output_dict["title"]="Configure Filesystem Partitions"
 				if output:
 					pass_count+=1
@@ -131,6 +142,14 @@ def result():
 	report=[]
 	count={}
 
+	#generating report pdf
+	data=report_generator.data_processing(temp1)
+	report_generator.create_pdf(data)
+
 	return render_template('p1.html',report=temp1,
 						total=total,no_of_partial=no_of_partial,
 						no_of_pass=no_of_pass,no_of_fail=no_of_fail)
+
+@app.route('/report_download', methods=['GET'])
+def report_download():
+	return send_from_directory("output","report.pdf",as_attachment=True)
