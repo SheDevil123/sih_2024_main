@@ -41,15 +41,15 @@
         <div class="summary">
             <div class="summary-box passed">
                 <h2>Passed Checks</h2>
-                <p>{{ (no_of_pass/total)*100}}% ({{ no_of_pass }})</p>
+                <p>{{ ((no_of_pass/total)*100)|round(2,'floor')}}% ({{ no_of_pass }})</p>
             </div>
             <div class="summary-box partially-passed">
                 <h2>Partially Passed Checks</h2>
-                <p>{{ (no_of_partial/total)*100}}% ({{ no_of_partial}})</p>
+                <p>{{ ((no_of_partial/total)*100)| round(2,'floor') }}% ({{ no_of_partial}})</p>
             </div>
             <div class="summary-box failed">
                 <h2>Failed Checks</h2>
-                <p>{{ (no_of_fail/total)*100}}% ({{ no_of_fail }})</p>
+                <p>{{ ((no_of_fail/total)*100) | round(2,'floor')}}% ({{ no_of_fail }})</p>
             </div>
         </div>
 
