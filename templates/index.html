@@ -6,8 +6,90 @@
     <title>Image Upload</title>
 </head>
 <body>
-    <h1>
-        scan for cramfs
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius:   
+ 5px;
+}
+
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+label {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+button {
+    display: block;
+    margin: 10px auto 0;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;   
+
+}
+
+button:hover {
+    background-color: #0069d9;   
+
+}
+
+/* Specific styles for checkbox labels */
+label[for="cramfs"],
+label[for="tmp"],
+label[for="var"],
+label[for="varlog"],
+label[for="vartmp"],
+label[for="varlogaudit"],
+label[for="home"],
+label[for="devshm"],
+label[for="apparmor"] {
+    display: flex;
+    align-items: center;
+}
+
+label[for="cramfs"]::before,
+label[for="tmp"]::before,
+label[for="var"]::before,
+label[for="varlog"]::before,
+label[for="vartmp"]::before,
+label[for="varlogaudit"]::before,
+label[for="home"]::before,
+label[for="devshm"]::before,
+label[for="apparmor"]::before {
+    content: ""; /* Checkmark character */
+    font-size: 16px;
+    margin-right: 5px;
+    color: #007bff; /* Match checkbox color */
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.2s ease;
+}
+
+input[type="checkbox"]:checked + label::before {
+    opacity: 1; /* Show checkmark when checked */
+}
+    </style>
+    <h1>    
+        Edit Your Scan
     </h1>
     <form method="post">
         <input type="checkbox" id="cramfs" name="cramfs" value="cramfs">
@@ -27,6 +109,9 @@
         <label for="home"> /home checks</label><br>
         <input type="checkbox" id="devshm" name="devshm" value="devshm">
         <label for="devshm"> /dev/shm checks</label><br>
+
+        <input type="checkbox" id="apparmor" name="apparmor" value="apparmor">
+        <label for="apparmor"> apparmor checks</label><br>
 
         <button type="submit">submit</button>
     </form>

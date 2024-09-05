@@ -3,8 +3,19 @@ import subprocess
 import os 
 import report_generator
 
+def report_dict_helper(pass_count,fail_count,no_of_files):
+	if pass_count==no_of_files:
+		return ["status passed",f'{no_of_files}/{no_of_files}',"PASS"]
+	elif pass_count>0:
+		return ["status partially-passed",f'{pass_count}/{no_of_files}',"PARTIAL PASS"]
+	else:
+		return ["status failed",f'0/{no_of_files}',"FAIL"]
+
+
 
 app=Flask(__name__)
+
+sudo_password_stream=subprocess.Popen('echo "8ebea7d1000"',stdout=subprocess.PIPE,shell=True).stdout
 
 
 report=[]
@@ -31,15 +42,12 @@ partition_check_data={
 	"varlog":"ensure /var/log is separate partition and nodev, nosuid, noexec options are set",
 	"varlogaudit":"ensure /var/log/audit is separate partition and nodev, nosuid, noexec options are set",
 }
-# partition_check_data={
-# 	"tmp":"Configure",
-# 	"devshm":"devshm desc",
-# 	"home":"home desc",
-# 	"var":"var desc",
-# 	"vartmp":"vartmp desc",
-# 	"varlog":"varlog desc",
-# 	"varlogaudit":"varlogaudit desc",
-# }
+
+AppArmor={
+    'install_check':'Ensure AppArmor is installed',
+    'bootloader_configuration':'Ensure AppArmor is enabled in the bootloader configuration',
+    'complain_enforcing':'Ensure all AppArmor Profiles are in enforce or complain mode and AppArmor Profiles are enforcing ',
+}
 
 @app.route('/', methods=['GET', 'POST'])
 def upload():
@@ -80,7 +88,7 @@ def upload():
 			if selected in form_data.keys():
 				pass_count=0
 				fail_count=0
-				no_of_files=1
+				no_of_files=len(os.listdir(f"partition_checks/{selected}"))
 
 				#checking if partition is available
 				process=subprocess.Popen(f'bash {os.path.join(f"partition_checks/{selected}",f"{selected}.sh")}',stdout=subprocess.PIPE,shell=True)
@@ -99,7 +107,6 @@ def upload():
 							process=subprocess.Popen(f'bash {os.path.join(f"partition_checks/{selected}",i)}',stdout=subprocess.PIPE,shell=True)
 							stdout_data,_=process.communicate()
 							output = stdout_data.decode('utf-8')
-							no_of_files+=1
 						else:
 							continue
 						
@@ -108,20 +115,79 @@ def upload():
 							fail_count+=1
 						else:
 							pass_count+=1
-						
-					if pass_count==no_of_files:
-						output_dict["pof"]=["status passed",f'{no_of_files}/{no_of_files}',"PASS"]
-					else:
-						output_dict["pof"]=["status partially-passed",f'{pass_count}/{no_of_files}',"PARTIAL PASS"]
 				else:
-					output_dict["pof"]=["status failed",f'0/{no_of_files}',"FAIL"]
-					fail_count+=no_of_files
+					fail_count=no_of_files
+
+				output_dict["pof"]=report_dict_helper(pass_count,fail_count,no_of_files)
 					
 				report.append(output_dict)
 				if pass_count==no_of_files:
 					count[selected]=[pass_count,0,fail_count]
 				else:
 					count[selected]=[0,pass_count,fail_count]
+			
+		#apparmor
+		if "apparmor" in form_data.keys():
+			no_of_files=3
+			pass_count=0
+			fail_count=0
+			output_dict={}
+
+			for i in os.listdir(f"apparmor"):
+				if i=="complain_enforcing.sh":
+					process=subprocess.Popen(f'sudo -S bash {os.path.join("apparmor",i)}',stdin=sudo_password_stream,stdout=subprocess.PIPE,shell=True)
+					stdout_data,_=process.communicate()
+					output = stdout_data.decode('utf-8')
+					output=output.split('\n')
+					print(output)
+					#unconfined profiles
+					temp=0
+					for j in output:
+						if ("processes are unconfined" in j):
+							num=[int(k) for k in j.split() if k.isdigit()][0] 
+							temp+=num
+							print("temp",temp)
+
+						if ("kill mode" in j) or ("unconfined mode") in j:
+							temp+=[int(k) for k in j.split() if k.isdigit()][0]
+							print("temp",temp)
+					if temp==0:
+						pass_count+=1
+					else:
+						fail_count+=1
+
+				elif i=="install_check.sh":
+					process=subprocess.Popen(f'bash {os.path.join(f"apparmor",i)}',stdout=subprocess.PIPE,shell=True)
+					stdout_data,_=process.communicate()
+					output = stdout_data.decode('utf-8')
+					output=output.count("installed")
+
+					if output==2:
+						pass_count+=1
+					else:
+						fail_count+=1
+					
+				else:
+					process=subprocess.Popen(f'bash {os.path.join(f"apparmor",i)}',stdout=subprocess.PIPE,shell=True)
+					stdout_data,_=process.communicate()
+					output = stdout_data.decode('utf-8')
+
+					if output:
+						fail_count+=1
+					else:
+						pass_count+=1
+
+			output_dict["pof"]=report_dict_helper(pass_count,fail_count,no_of_files)
+			output_dict["title"]="Mandatory Access Control"
+			output_dict["desc"]="Ensuring AppArmor Configuration"
+
+			report.append(output_dict)
+
+			if pass_count==no_of_files:
+				count[selected]=[pass_count,0,fail_count]
+			else:
+				count[selected]=[0,pass_count,fail_count]
+
 		return redirect('/result')
 	return render_template("index.html")
 
@@ -139,13 +205,14 @@ def result():
 
 	total=no_of_fail+no_of_pass+no_of_partial
 	temp1=list(report)
+	print(count)
 	report=[]
 	count={}
 
 	#generating report pdf
 	data=report_generator.data_processing(temp1)
 	report_generator.create_pdf(data)
-
+	
 	return render_template('p1.html',report=temp1,
 						total=total,no_of_partial=no_of_partial,
 						no_of_pass=no_of_pass,no_of_fail=no_of_fail)
