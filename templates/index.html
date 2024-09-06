@@ -53,7 +53,7 @@ button:hover {
 
 }
 
-/* Specific styles for checkbox labels */
+/* Specific styles for checkbox labels 
 label[for="cramfs"],
 label[for="tmp"],
 label[for="var"],
@@ -65,7 +65,7 @@ label[for="devshm"],
 label[for="apparmor"] {
     display: flex;
     align-items: center;
-}
+}*/
 
 label[for="cramfs"]::before,
 label[for="tmp"]::before,
@@ -76,7 +76,7 @@ label[for="varlogaudit"]::before,
 label[for="home"]::before,
 label[for="devshm"]::before,
 label[for="apparmor"]::before {
-    content: ""; /* Checkmark character */
+    /* Checkmark character */
     font-size: 16px;
     margin-right: 5px;
     color: #007bff; /* Match checkbox color */
@@ -112,6 +112,22 @@ input[type="checkbox"]:checked + label::before {
 
         <input type="checkbox" id="apparmor" name="apparmor" value="apparmor">
         <label for="apparmor"> apparmor checks</label><br>
+
+        <input type="checkbox" id="netD" name="netD" value="netD">
+        <label for="netD"> network devices checks</label><br>
+        <input type="checkbox" id="netKM" name="netKM" value="netKM">
+        <label for="netKM"> network kernal modules checks</label><br>
+        <input type="checkbox" id="netKP" name="netKP" value="netKP">
+        <label for="netKP"> network Kernal Parameters checks</label><br>
+
+        <input type="checkbox" id="client_services" name="client_services" value="client_services">
+        <label for="client_services"> Client Services checks</label><br>
+        <input type="checkbox" id="server_services" name="server_services" value="server_services">
+        <label for="server_services"> Server Services checks</label><br>
+        <input type="checkbox" id="job_scheduler" name="job_scheduler" value="job_scheduler">
+        <label for="job_scheduler"> Job Scheduler checks</label><br>
+        <input type="checkbox" id="time_sync" name="time_sync" value="time_sync">
+        <label for="time_sync"> Time Sychronization checks</label><br>
 
         <button type="submit">submit</button>
     </form>
