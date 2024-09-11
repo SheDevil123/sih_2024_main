@@ -2,6 +2,7 @@ from flask import Flask, request, redirect,url_for,render_template, send_from_di
 import subprocess 
 import os 
 import report_generator
+import re
 
 def report_dict_helper(pass_count,fail_count,no_of_files,count_name):
 	global count
@@ -38,6 +39,8 @@ def nothing_should_be_returned(path,pass_count,fail_count):
 
 	return pass_count,fail_count,output
 
+def number_extract(string):
+	return re.findall(r"\d+",string)
 
 app=Flask(__name__)
 
@@ -47,6 +50,7 @@ sudo_password_stream=subprocess.Popen('echo "8ebea7d1000"',stdout=subprocess.PIP
 report=[]
 networking_reports=[]
 services_reports=[]
+system_maintenence_reports=[]
 
 count={}
 
@@ -62,6 +66,11 @@ parent_dict_services={
     'Time_Sychronization':'Ensure chrony is enabled and running, a single time synchronization daemon is in use, systemd-timesyncd is configured with an authorized timeserver, and chrony is running as user _chrony to maintain accurate and secure time synchronization.',
     'Job_Schedulers':'Ensure permissions on /etc/cron.d, /etc/cron.daily, /etc/cron.hourly, /etc/cron.monthly, /etc/crontab, and /etc/cron.weekly are configured, crontab and at are restricted to authorized users, to maintain secure and controlled scheduling of tasks.',
 
+}
+
+parent_dict_system_maintenence={
+    'Local_UserGroupSetting':'Ensure accounts use shadowed passwords, verify that password fields are not empty, and confirm that all groups exist in /etc/group. Ensure no duplicate UIDs, GIDs, usernames, or group names exist, and that home directories and dot files are correctly configured for local interactive users.',
+    'File_Permission':'Ensure permissions on critical system files like /etc/passwd, /etc/group, /etc/shadow, and others are properly configured. Ensure world-writable files and directories are secured, all files and directories have an owner and a group, and SUID/SGID files are reviewed for security.'
 }
 
 filesystem_check_data={
@@ -94,7 +103,8 @@ AppArmor={
 
 @app.route('/', methods=['GET', 'POST'])
 def upload():
-	global report,count
+	global report,count,networking_reports,services_reports,system_maintenence_reports
+
 	if request.method == 'POST':
 		kernal_modules=request.form.get("cramfs")
 		form_data=dict(request.form.items())
@@ -222,8 +232,6 @@ def upload():
 
 			report.append(output_dict)
 
-
-
 		#next 3 if cases is for Networking section
 		if "netKP" in form_data.keys():
 			no_of_files=11
@@ -349,21 +357,58 @@ def upload():
 																		fail_count=fail_count)
 				else:
 					pass_count,fail_count,_=pass_fail(path=os.path.join(f"Services/Time_Synchronize",i),
-																		pass_count=pass_count,
-																		fail_count=fail_count)
+														pass_count=pass_count,
+														fail_count=fail_count)
 					
 			output_dict["pof"]=report_dict_helper(pass_count,fail_count,no_of_files,"job_scheduler")
 			output_dict["title"]='Time Sychronization'
 			output_dict["desc"]=parent_dict_services['Time_Sychronization']
 
 			services_reports.append(output_dict)
+
+		#System maintainance starts from here
+		if "sys_file_perms" in form_data.keys():
+			no_of_files,pass_count,fail_count=12,0,0
+			output_dict={}
+			for i in os.listdir("System_Maintenence/File_Permission"):
+				process=subprocess.Popen(f'bash {os.path.join("System_Maintenence/File_Permission",i)}',stdout=subprocess.PIPE,shell=True)
+				stdout_data,_=process.communicate()
+				output = stdout_data.decode('utf-8')
+
+				if i in ["7.1.1.sh","7.1.2.sh","7.1.3.sh","7.1.4.sh","7.1.9.sh"]: # permissions below 644 and /0 root must appear twice 
+					nums=number_extract(output)
+					if int(nums[0])<=644 and output.count("0/ root")==2:
+						pass_count+=1
+					else:
+						fail_count+=1
+				elif i in ["7.1.5.sh","7.1.6.sh","7.1.7.sh","7.1.8.sh"]: # permissions below 640 and /0 root may appear twice
+					nums=number_extract(output)
+					if int(nums[0])<=640 and (output.count("0/ root")==2 or (("0/ root" in output) and ("shadow" in output))):
+						pass_count+=1
+					else:
+						fail_count+=1
+				elif i in ["7.1.11.sh","7.1.12.sh"]:
+					pass_count,fail_count,_=pass_fail(path=os.path.join(f"System_Maintenence/File_Permission",i),
+														pass_count=pass_count,
+														fail_count=fail_count)
+				else: #7.1.10 imma code it later cos im hungry af
+					pass
+
+			output_dict["pof"]=report_dict_helper(pass_count,fail_count,no_of_files,"sys_file_perms")
+			output_dict["title"]="File Permission"
+			output_dict["desc"]=parent_dict_system_maintenence["File_Permission"]
+
+			system_maintenence_reports.append(output_dict)
+				
+
+
 		
 		return redirect('/result')
 	return render_template("index.html")
 
 @app.route('/result', methods=['POST','GET'])
 def result():
-	global report,count,count,networking_reports,services_reports
+	global report,count,networking_reports,services_reports,system_maintenence_reports
 	no_of_pass=0
 	no_of_fail=0
 	no_of_partial=0
@@ -377,17 +422,19 @@ def result():
 	temp1=list(report)
 	temp1+=networking_reports
 	temp1+=services_reports
+	temp1+=system_maintenence_reports
 	print(services_reports)
 	print(count) 
 	report=[]
 	networking_reports=[]
 	services_reports=[]
+	system_maintenence_reports=[]
 	count={}
-
+	print("generating report...")
 	#generating report pdf
 	data=report_generator.data_processing(temp1)
 	report_generator.create_pdf(data)
-	
+	print("report generated...")
 	return render_template('p1.html',report=temp1,
 						total=total,no_of_partial=no_of_partial,
 						no_of_pass=no_of_pass,no_of_fail=no_of_fail)
