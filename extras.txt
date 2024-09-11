@@ -1,0 +1,2 @@
+postfix
+openssh-server  #ssh command not found

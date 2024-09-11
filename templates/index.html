@@ -117,8 +117,28 @@ input[type="checkbox"]:checked + label::before {
 
         <input type="checkbox" id="sys_file_perms" name="sys_file_perms" value="sys_file_perms">
         <label for="sys_file_perms"> System File Permissions checks</label><br>
-        <input type="checkbox" id="time_sync" name="time_sync" value="time_sync">
-        <label for="time_sync"> Time Sychronization checks</label><br>
+        <input type="checkbox" id="local_usr_grp" name="local_usr_grp" value="local_usr_grp">
+        <label for="local_usr_grp"> Local User and Group Settings checks</label><br>
+
+        <input type="checkbox" id="PAM_Arguments" name="PAM_Arguments" value="PAM_Arguments">
+        <label for="PAM_Arguments"> PAM Arguments</label><br>
+        <input type="checkbox" id="pam_auth_update_profiles" name="pam_auth_update_profiles" value="pam_auth_update_profiles">
+        <label for="pam_auth_update_profiles"> PAM Authentication Update Profiles</label><br>
+        <input type="checkbox" id="PAM_Software_packages" name="PAM_Software_packages" value="PAM_Software_packages">
+        <label for="PAM_Software_packages"> PAM Software Packages</label><br>
+
+        <input type="checkbox" id="root_sys_acc_env" name="root_sys_acc_env" value="root_sys_acc_env">
+        <label for="root_sys_acc_env"> Root and system accounts and environment</label><br>
+        <input type="checkbox" id="shadow_password_suite" name="shadow_password_suite" value="shadow_password_suite">
+        <label for="shadow_password_suite"> Shadow password suite parameters</label><br>
+        <input type="checkbox" id="user_def_env" name="user_def_env" value="user_def_env">
+        <label for="user_def_env"> User default environment</label><br>
+
+        <input type="checkbox" id="sshserver" name="sshserver" value="sshserver">
+        <label for="sshserver"> SSH Server</label><br>
+
+        <input type="checkbox" id="priv_esc" name="priv_esc" value="priv_esc">
+        <label for="priv_esc"> Privilege Escalation</label><br>
 
         <button type="submit">submit</button>
     </form>
