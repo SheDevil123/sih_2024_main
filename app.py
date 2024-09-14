@@ -40,7 +40,6 @@ def nothing_should_be_returned(path,pass_count,fail_count,sudo=False):
 
 	if not output: pass_count+=1
 	else: 
-		print(path)
 		fail_count+=1
 
 	return pass_count,fail_count,output
@@ -499,9 +498,13 @@ def upload():
 					stdout_data,_=process.communicate()
 					output = stdout_data.decode('utf-8')
 					#PAM ARGUMENTS SECTION
-					if 'unix' in i:
-
-						if ('use_authtok' in output) or ('sha512' in output) or ('yescrypt' in output) or ('remember' not in output) or ('nullok' not in output):
+					if i=="pam_unix_no_inc_remember.sh":
+						if ("pam_unix.so nullok" in output):
+							fail_count+=1
+						else:
+							pass_count+=1
+					elif 'unix' in i:
+						if ('use_authtok' in output) or ('sha512' in output) or ('yescrypt' in output) or ('remember' not in output):
 							pass_count += 1
 						else:
 							fail_count += 1
@@ -610,6 +613,8 @@ def upload():
 						else:
 							fail_count += 1
 					elif i in ['def_usr_shell_timeout.sh','def_usr_umask.sh']:
+						if 'def_usr_shell_timeout.sh':
+							print("grep dir not found is normal")
 						if "PASS" in output:
 							pass_count += 1
 						else:
@@ -659,7 +664,7 @@ def upload():
 				elif i == 'sshd_maxstartups.sh':
 					pass_count,fail_count,_=nothing_should_be_returned(path=f"Access_Control/SSH_Server/{i}",
 						pass_count=pass_count,
-						fail_count=fail_count)
+						fail_count=fail_count,sudo=True)
 				else:
 					process=subprocess.Popen(f'sudo -S bash {os.path.join(f"Access_Control/SSH_Server/",i)}',stdin=sudo_password_stream,stdout=subprocess.PIPE,shell=True)
 					stdout_data,_=process.communicate()

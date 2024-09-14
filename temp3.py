@@ -3,9 +3,15 @@ import subprocess
 
 
 
-process=subprocess.Popen(f'bash {os.path.join("partition_checks/tmp","tmp.sh")}',stdout=subprocess.PIPE,shell=True)
-output_dict={}
-stdout_data,_=process.communicate()
-output = stdout_data.decode('utf-8')
+import subprocess
 
-print(bool(output))
+x=subprocess.Popen('echo "8ebea7d1000"',stdout=subprocess.PIPE,shell=True)
+
+
+
+
+for i in os.listdir("Access_Control/User_acc_env/root_sys_acc_env"):
+    print(i)
+    process=subprocess.Popen(f'sudo -S bash {os.path.join("Access_Control/User_acc_env/root_sys_acc_env",i)}',stdin=x.stdout,stdout=subprocess.PIPE,shell=True)
+    y,_=process.communicate()
+    print(y.decode())

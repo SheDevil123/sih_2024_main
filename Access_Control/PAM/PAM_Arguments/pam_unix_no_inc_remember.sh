@@ -1,4 +1,4 @@
-grep -PH -- '^\h*^\h*[^#\n\r]+\h+pam_unix\.so\b' /etc/pam.d/common- {password,auth,account,session,session-noninteractive} | grep -Pv -- '\bremember=\d+\b'
+grep -PH -- '^\h*^\h*[^#\n\r]+\h+pam_unix\.so\b' /etc/pam.d/common-{password,auth,account,session,session-noninteractive} | grep -Pv -- '\bremember=\d+\b'
 
 # /etc/pam.d/common-password:password [success=1 default=ignore]
 # pam_unix.so obscure yescrypt

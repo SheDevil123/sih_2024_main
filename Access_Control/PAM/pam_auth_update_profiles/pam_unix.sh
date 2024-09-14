@@ -1,4 +1,4 @@
-grep -P -- '\bpam_unix\.so\b' /etc/pam.d/common- {account,session,auth,password}
+grep -P -- '\bpam_unix\.so\b' /etc/pam.d/common-{account,session,auth,password}
 
 # /etc/pam.d/common-account:account [success=1 new_authtok_reqd=done
 # default=ignore] pam_unix.so
