@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -157,4 +157,117 @@ input[type="checkbox"]:checked + label::before {
 
         <button type="submit">submit</button>
     </form>
+</body> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Shield</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='mainpage.css') }}">
+    <script src="{{ url_for('static', filename='helper.js') }}"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="#home" class="logo-link">
+                <img src="{{ url_for('static',filename='logo.png') }}" alt="Cyber Shield Logo" class="logo">
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="container">
+            <h1>Protect Your Digital World with Cyber Shield</h1>
+            <p>Advanced cybersecurity solutions for businesses and individuals.</p>
+        </div>
+    </section>
+
+    <section id="logo-container">
+        <div class="logo-row">
+            <div class="logo-item">
+                <img src="{{ url_for('static',filename='logo.png') }}" alt="Ubuntu Logo">
+                <h3>Ubuntu</h3>
+                <select class="version-dropdown" id="ubuntu-version">
+                    <option value="" disabled selected>Select a version</option>
+                    <option value="ubuntu-desktop-20-04">Ubuntu Desktop (20.04 LTS)</option>
+                    <option value="ubuntu-desktop-22-04">Ubuntu Desktop (22.04 LTS)</option>
+                    <option value="ubuntu-server-12-04">Ubuntu Server (12.04 LTS)</option>
+                    <option value="ubuntu-server-14-04">Ubuntu Server (14.04 LTS)</option>
+                </select>
+            </div>
+            <div class="logo-item">
+                <img src="{{ url_for('static',filename='logo.png') }}" alt="Windows Logo">
+                <h3>Windows</h3>
+                <select class="version-dropdown" id="windows-version">
+                    <option value="" disabled selected>Select a version</option>
+                    <option value="windows-enterprise">Windows 11 (Enterprise version)</option>
+                    <option value="windows-standalone">Windows 11 (Standalone version)</option>
+                </select>
+            </div>
+            <div class="logo-item">
+                <img src="{{ url_for('static',filename='logo.png') }}" alt="Redhat Logo">
+                <h3>Redhat</h3>
+                <select class="version-dropdown" id="redhat-version">
+                    <option value="" disabled selected>Select a version</option>
+                    <option value="redhat-8">Redhat Enterprise (8)</option>
+                    <option value="redhat-9">Redhat Enterprise (9)</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <h2>About Us</h2>
+            <p>Cyber Shield is a leading provider of cybersecurity solutions designed to protect your digital assets from evolving threats. With state-of-the-art technology and a dedicated team, we ensure your safety online.</p>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <h2>Our Services</h2>
+            <div class="service-card">
+                <h3>Threat Detection</h3>
+                <p>Identify and mitigate potential cyber threats before they become a problem.</p>
+            </div>
+            <div class="service-card">
+                <h3>Data Protection</h3>
+                <p>Secure your sensitive information with our advanced encryption technologies.</p>
+            </div>
+            <div class="service-card">
+                <h3>Network Security</h3>
+                <p>Protect your network from unauthorized access and ensure secure communication.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Cyber Shield. All rights reserved.</p>
+        </div>
+    </footer>
+    <!-- Custom Modal for Root Password -->
+<div id="passwordModal" class="modal">
+    <div class="modal-content">
+        <h2>Enter Root Password</h2>
+        <input type="password" id="rootPasswordInput" placeholder="Enter root password">
+        <div class="modal-buttons">
+            <button id="modalOkBtn" class="modal-btn modal-btn-green">OK</button>
+            
+            <button id="modalCancelBtn" class="modal-btn modal-btn-red">Cancel</button>
+        </div>
+    </div>
+</div>
+  <script src="{{url_for('static', filename='mainpage.js') }}"></script>
 </body>
+</html>

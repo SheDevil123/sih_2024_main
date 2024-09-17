@@ -56,6 +56,7 @@ report=[]
 networking_reports=[]
 services_reports=[]
 system_maintenence_reports=[]
+access_controls_reports=[]
 
 count={}
 
@@ -591,7 +592,7 @@ def upload():
 				output_dict["pof"]=report_dict_helper(pass_count,fail_count,no_of_files,selected)
 				output_dict["desc"]=PAM[selected]
 				output_dict["title"]="Pluggable Authentication Modules"
-				report.append(output_dict)
+				access_controls_reports.append(output_dict)
 		#User Accounts and Environment
 		for selected in usr_acc_env.keys():
 			if selected in form_data.keys():
@@ -651,7 +652,7 @@ def upload():
 				output_dict["desc"]=usr_acc_env[selected]
 				output_dict["title"]="User Accounts and Environment"
 					
-				report.append(output_dict)
+				access_controls_reports.append(output_dict)
 		#ssh server config
 		if "sshserver" in form_data.keys():
 			no_of_files,pass_count,fail_count=22,0,0
@@ -765,7 +766,7 @@ def upload():
 			output_dict["title"]='SSH Server'
 			output_dict["desc"]=sshserver['SSH_Server']
 			
-			report.append(output_dict)
+			access_controls_reports.append(output_dict)
 		if 'priv_esc' in form_data.keys():
 			no_of_files,pass_count,fail_count=7,0,0
 			output_dict={}
@@ -826,7 +827,7 @@ def upload():
 			output_dict["title"]='Privilege escalation'
 			output_dict["desc"]=priv_esc['Privilege_escalation']
 			
-			report.append(output_dict)
+			access_controls_reports.append(output_dict)
 
 		#System maintainance starts from here
 		if "sys_file_perms" in form_data.keys():
@@ -874,7 +875,7 @@ def upload():
 														pass_count=pass_count,
 														fail_count=fail_count,sudo=True)
 				else:
-					pass_count,fail_count,_=nothing_should_be_returned(path=os.path.join(f"Services/Client_Services",i),
+					pass_count,fail_count,_=nothing_should_be_returned(path=os.path.join(f"System_Maintenence/Local_UserGroupSetting",i),
 																	pass_count=pass_count,
 																	fail_count=fail_count,sudo=True)
 
@@ -890,7 +891,7 @@ def upload():
 
 @app.route('/result', methods=['POST','GET'])
 def result():
-	global report,count,networking_reports,services_reports,system_maintenence_reports
+	global report,count,networking_reports,services_reports,system_maintenence_reports,access_controls_reports
 	no_of_pass=0
 	no_of_fail=0
 	no_of_partial=0
@@ -905,12 +906,14 @@ def result():
 	temp1+=networking_reports
 	temp1+=services_reports
 	temp1+=system_maintenence_reports
+	temp1+=access_controls_reports
 	print(services_reports)
 	print(count) 
 	report=[]
 	networking_reports=[]
 	services_reports=[]
 	system_maintenence_reports=[]
+	access_controls_reports=[]
 	count={}
 	print("generating report...")
 	#generating report pdf
@@ -924,3 +927,14 @@ def result():
 @app.route('/report_download', methods=['GET'])
 def report_download():
 	return send_from_directory("output","report.pdf",as_attachment=True)
+
+@app.route('/process', methods=['GET','POST'])
+def process():
+	password_string,version=request.form.get('idk'),request.form.get('version')
+	if version=="ubuntu-desktop-22-04":
+		return redirect("/result")
+	return redirect("/unavailable")
+
+@app.route("/unavailable", methods=['GET','POST'])
+def unavailable():
+	return render_template("unavailable.html")
