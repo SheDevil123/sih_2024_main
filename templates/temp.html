@@ -2,7 +2,8 @@
 <html>
 <head>
     <title>JavaScript to Python Example</title>
-    <script src="{{url_for('static',filename='helper.js')}}"></script>
+    <!-- <script src="{{url_for('static',filename='helper.js')}}"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <input type="text" id="input">
@@ -19,6 +20,7 @@
                     console.log(error);
                 }
             });
+            window.location.href = "/fml";
         }
     </script>
 </body>

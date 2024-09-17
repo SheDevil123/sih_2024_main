@@ -27,6 +27,13 @@ document.querySelectorAll('.version-dropdown').forEach(dropdown => {
                     url: '/process',
                     type: 'POST',
                     data: { 'idk': rootPassword, "version":selectedVersion },
+                    success:function(request){
+                        if(selectedVersion=="ubuntu-desktop-22-04"){
+                            window.location.href = "/selection";
+                        }else{
+                            window.location.href = "/unavailable";
+                        }
+                    },
                     error: function(error) {
                         console.log(error);
                     }

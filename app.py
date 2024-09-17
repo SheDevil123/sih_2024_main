@@ -931,10 +931,15 @@ def report_download():
 @app.route('/process', methods=['GET','POST'])
 def process():
 	password_string,version=request.form.get('idk'),request.form.get('version')
-	if version=="ubuntu-desktop-22-04":
-		return redirect("/result")
-	return redirect("/unavailable")
+	return "anythign u wanna return to js code"
 
 @app.route("/unavailable", methods=['GET','POST'])
 def unavailable():
 	return render_template("unavailable.html")
+
+@app.route("/selection", methods=['GET','POST'])
+def selection():
+	return render_template("selection.html")
+
+
+

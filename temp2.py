@@ -12,6 +12,10 @@ def process():
     print(data)
     # process the data using Python code
     result = data.upper()
+    return redirect("/fml")
+
+@app.route('/fml',methods=['GET','POST'])
+def fml():
     return render_template("index.html")
 
 if __name__ == '__main__':
