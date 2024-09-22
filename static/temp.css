@@ -1,0 +1,103 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #181818;
+  }
+  
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .logo {
+    position: absolute;
+    left: 0;
+    margin-left: 20px;
+  }
+  
+  .logo-image {
+    width: 80px;
+    height: auto;
+  }
+  
+  .heading {
+    text-align: center;
+    color: gold;
+    text-shadow: 1px 1px 2px black;
+  }
+  
+  .checklist-type {
+    text-align: center;
+    margin-top: 40px;  /* Adjusted to push this section down slightly */
+  }
+  
+  .center-label {
+    font-size: 1.2em;
+    color: gold;
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin: 0 auto;
+  }
+  
+  .checkbox-group div {
+    margin-bottom: 5px;
+  }
+  
+  input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  .checkbox-group label {
+    color: yellow;
+  }
+  
+  .templates-table {
+    margin-top: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: darkblue; /* Changed to dark blue */
+    color: white; /* Text color inside the table set to white for better contrast */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #001f3f; /* Darker shade of blue for the header */
+  }
+  
+  td input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  table tr:nth-child(even) {
+    background-color: #00264d; /* Alternating rows in a slightly lighter blue */
+  }
+  
+  table tr:nth-child(odd) {
+    background-color: #003366; /* Alternating rows in a medium blue */
+  }

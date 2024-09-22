@@ -11,8 +11,7 @@ module_loadable_chk()
 {
 # Check if the module is currently loadable
 l_loadable="$(modprobe -n -v "$l_mname")"
-[ "$(wc -l <<< "$l_loadable")" -gt "1" ] && l_loadable="$(grep -P --
-"(^\h*install|\b$l_mname)\b" <<< "$l_loadable")"
+[ "$(wc -l <<< "$l_loadable")" -gt "1" ] && l_loadable="$(grep -P -- "(^\h*install|\b$l_mname)\b" <<< "$l_loadable")"
 if grep -Pq -- '^\h*install \/bin\/(true|false)' <<< "$l_loadable"; then
 l_output="$l_output\n - module: \"$l_mname\" is not loadable: \"$l_loadable\""
 else

@@ -1,0 +1,3 @@
+ufw status numbered
+
+#inactive
